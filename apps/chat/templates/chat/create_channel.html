@@ -1,0 +1,112 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+  {% block title %} Creative - Bootstrap Admin Template {% endblock title %}
+
+{% block body-content %}
+ <div class="container txt-center">
+ 	<div class="formcontainer" style="">
+	<!-- Form to create group having one-to-many conversation -->
+	<center>
+	<form method="POST"  id="personForm" class="allforms" >
+		{% csrf_token %}
+		<h2><b>Create Group<b></h2>
+     <p>Admin: {{ request.user.first_name }} {{ request.user.last_name }}</p>
+    <div class = "row from-group">
+		  <div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+          <label for="male">Group Name : </label>
+      </div>
+		  <div class="col-md-8 col-bg-8 col-sm-8 col-lg-8">
+          <input type="text" name="grpname" class="form-control" required>
+      </div>
+    </div><br>
+
+		<div class = "row from-group">
+  		<div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+          <label for="id_child">Select Members:</label> 
+      </div>
+  		<div class="col-md-8 col-bg-8 col-sm-8 col-lg-8">
+          <select name="members" class="form-control" id="id_child" class="form-control" multiple required="required">
+  		    </select>
+      </div>
+    </div><br>
+
+    <div class = "row from-group">
+      <div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+          <label for="id_usernm">Description:</label>
+      </div>
+      <div class="col-md-8 col-bg-8 col-sm-8 col-lg-8">
+          <textarea id="chat-log" cols="100" name="description" required="required" 
+              class="form-control rounded-0" rows="5" style="resize: none;"></textarea>
+      </div><br>
+    </div><br>
+
+   <input type="Submit" class = "btn allbtn" name="" value="Create" style="">
+   
+	</form>
+  </center>
+	</div>
+ </div>
+
+{% endblock body-content %}
+
+{% block javascript-code %}
+<script src="{% static 'js/scripts.js' %}"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+<script type="text/javascript">
+  $(document).ready(function(){
+  	const url = $('#personForm').attr("data-names-url");
+   	const usernmId = $('#').val();
+
+    $.ajax({
+       type:  "GET",
+       url : "{% url "ajax_load_channel_names" %}",
+       dataType: 'json',
+       success: function(data){
+        var j;
+        var pm = [];
+        var web = [];
+        var tl = [];
+        var cto = [];
+        for (j = 0; j < data.length; j++) {
+            if (data[j]["designation"] == "Project Manager") {
+                pm.push(data[j]);
+            } else if (data[j]["designation"] == "Tech Leader") {
+                tl.push(data[j]);
+            }else if (data[j]["designation"] == "Cheif Technical Officer"){
+                cto.push(data[j]);
+            } else {
+                web.push(data[j]);
+            }
+        } 
+
+        html="<optgroup label=Cheif Technical Officer>";
+        for(j = 0; j < cto.length; j++) {
+          html+="<option value="+cto[j]["id"]+" name=option-value>"+cto[j]
+                ["first_name"]+' '+ cto[j]["last_name"]+"</option></optgroup>"
+        }
+        html+="<optgroup label=Project Manager>";
+        for(j = 0; j < pm.length; j++) {
+          html+="<option value="+pm[j]["id"]+" name=option-value>"+pm[j]
+                ["first_name"]+ ' '+ pm[j]["last_name"]+"</option></optgroup>"
+        }
+        html+="<optgroup label=Tech Leader>";
+        for(j = 0; j < tl.length; j++) {
+          html+="<option value="+tl[j]["id"]+" name=option-value>"+tl[j]
+                ["first_name"]+ ' '+ tl[j]["last_name"]+"</option></optgroup>"
+        }
+        html+="<optgroup label=Web Developer>";
+        for(j = 0; j < web.length; j++) {
+          html+="<option value="+web[j]["id"]+" name=option-value>"+web[j]
+                ["first_name"]+ ' '+ web[j]["last_name"]+"</option></optgroup>"
+        }
+
+        $('#id_child').html(html);
+        }
+    });
+   
+  });
+</script>
+ {% endblock javascript-code %}

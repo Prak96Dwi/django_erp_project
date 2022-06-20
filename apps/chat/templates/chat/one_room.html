@@ -1,0 +1,98 @@
+<!-- chat/templates/chat/room.html -->
+{% extends 'user/base.html' %}
+{% load static %}
+
+  {% block title %} Creative - Bootstrap Admin Template {% endblock title %}
+
+
+{% block body-content %}
+<div class="container txt-center">
+    <div style="margin-left:250px; margin-top: 150px; margin-bottom: 60px;">
+    {% for i in message %}
+        <ul style="background-color: white">
+            <li><b>{{ i.e_name }}</b></li>
+            <li>{{ i.e_message }}</li>
+        </ul>
+    {% endfor %}
+    
+    <!-- <textarea id="chat-log" cols="108" rows="5" style="resize: none; border: none;"> -->
+    <!-- </textarea><br><br> -->
+    <form method="POST">
+    {% csrf_token %}
+    <div class="form-group row"
+        style="position: fixed; top: 0;">
+        <div class="col-md-10 col-bg-10 col-sm-10 col-lg-10">
+            <input id="chat-message-input" type="text" size="100" name="mytext"
+               class="form-control" 
+              placeholder="Type Your Message" required>
+        </div>
+      <div class="col-md-2 col-bg-2 col-sm-2 col-lg-2">
+        <input id="chat-message-submit" type="submit" class="btn allbtn" style=""
+         value="Send">
+      </div>
+    </div>
+    </form>
+    {{ room_name|json_script:"room-name" }}
+    {{ user_name|json_script:"user-name" }}
+  </div>
+  </div>
+    {% endblock body-content %}
+
+    {% block javascript-code %}
+    <script>
+        // const username = '{{ request.user.username }}'
+        const username = JSON.parse(document.getElementById('user-name').textContent);
+        const roomName = JSON.parse(document.getElementById('room-name').textContent);
+
+        const chatSocket = new WebSocket(
+            'ws://'
+            + window.location.host
+            + '/ws/onechat/'
+            + roomName
+            + '/'
+        );
+
+        chatSocket.onmessage = function(e) {
+            const data = JSON.parse(e.data);
+
+            var person = {
+                fullName: function() {
+                return this.userName;
+                }
+            }
+
+            var message = {
+                myMessage: function(){
+                    return this.myMsg
+                }
+            }
+
+            var data1 = {
+                userName:    data.username,
+            }
+
+            var data2 = {
+                myMsg :      data.message,
+            }
+
+            var x = person.fullName.call(data1); 
+            var y = message.myMessage.call(data2)
+            document.getElementById("demo1").innerHTML = x;
+            document.getElementById("demo2").innerHTML = y;
+        };
+
+        chatSocket.onclose = function(e) {
+            console.error('Chat socket closed unexpectedly');
+        };
+
+        document.querySelector('#chat-message-submit').onclick = function(e) {
+            const messageInputDom = document.querySelector('#chat-message-input');
+            const message = messageInputDom.value;
+            chatSocket.send(JSON.stringify({
+                'message': message,
+                'username': username,
+            }));
+            // messageInputDom.value = '';
+        };
+    </script>
+    {% endblock javascript-code %}

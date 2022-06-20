@@ -1,0 +1,19 @@
+
+<header class="header dark-bg">
+	<!--logo start-->
+	<a href="index.html" class="logo">Webllisto<span class="lite">erp</span></a>
+	<!--logo end-->
+
+	<!--  search form start -->
+	<ul class="nav top-menu">
+	  
+	  <li style="margin-left: 870px; ">
+	    <div><p style="font-size: 20px; margin: 2px 0 1px">{{ request.user.get_full_name }}</p></div>
+	  </li>
+
+	  <li style="margin-left: 870px; padding-bottom: 3px;">
+	  {{ request.user.designation }}
+	  </li>
+	<!--  search form end -->
+	</ul>
+</header>

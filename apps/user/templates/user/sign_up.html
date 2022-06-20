@@ -1,0 +1,31 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+
+{% block title %}Login Page 2 | Creative - Bootstrap 3 Responsive Admin Template
+{% endblock title %}
+  
+
+{% block body-content %}
+  <div class="container">
+    <form class="login-form" action="" method="POST"
+      enctype="multipart/form-data" >
+      {% csrf_token %}
+      <p style="font-size: 30px; font-family: bold; text-align: center; margin: 0;">CreateUser Form</p>
+      <div class="login-wrap">
+
+          {% for field in form %}
+            {{ field.label_tag }}<br> 
+            {{ field }} <br>
+            {{ field.errors }}<br>
+          {% endfor %}
+
+        <button class="btn btn-lg btn-block signbtn"
+          style="" value="Send"
+          type="submit">Create User
+        </button>
+      </div>
+    </form>
+  </div>
+{% endblock body-content %}
+

@@ -1,0 +1,198 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+  {% block title %} Creative - Bootstrap Admin Template {% endblock title %}
+  {% block bootstrap-css %}
+  
+  <link href="{% static 'assets/fullcalendar/fullcalendar/bootstrap-fullcalendar.css' %}" 
+  rel="stylesheet" />
+  {% endblock bootstrap-css %}
+  <!--external css-->
+  
+  
+  <!-- Custom styles -->
+  {% block custom-style-css %}
+  <link href="{% static 'css/widgets.css' %}" rel="stylesheet">
+  <link href="{% static 'css/jquery-ui-1.10.4.min.css' %}" rel="stylesheet">
+  {% endblock custom-style-css %}
+
+  {% block jquery-datatable-css %}
+    <link rel="stylesheet" href="//cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css">
+  {% endblock jquery-datatable-css %}
+  
+  {% block body-content %}
+  <div class="container">
+  <aside class = "heirarchy-pos" 
+    style=" width: 30%;  margin-left: 950px; margin-top: 100px; background-color: grey; color: white;">
+    <div>
+      <p style="font-size: 25px; padding-left: 40px;" >User Heirarchy</p>
+      <ul id="mylist">
+
+        {% if DIR %}
+          <b>Director: </b><br>
+          {% for ele in DIR %}
+            {% if request.user.username == ele.username %}
+              <li>{{ ele.first_name }} {{ ele.last_name }} (YOU)</li>
+            {% else %}
+              <li>{{ ele.first_name }} {{ ele.last_name }}</li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if CTO %}
+          <b>Cheif Technical Officer: </b><br>
+          {% for ele in CTO %}
+            {% if request.user.username == ele.username %}
+              <li>{{ ele.first_name }} {{ ele.last_name }} (YOU)</li>
+            {% else %}
+              <li>{{ ele.first_name }} {{ ele.last_name }}</li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        
+        {% if context2.PM %}
+          <b>Project Manager: </b><br>
+          {% for ele in PM %}
+            {% if request.user.username == ele.username %}
+              <li>{{ ele.first_name }} {{ ele.last_name }} (YOU)</li>
+            {% else %}
+              <li>{{ ele.first_name }} {{ ele.last_name }}</li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if TL %}
+          <b>Team Leader: </b><br>
+          {% for ele in TL %}
+            {% if request.user.username == ele.username %}
+              <li>{{ ele.first_name }} {{ ele.last_name }} (YOU)</li>
+            {% else %}
+              <li>{{ ele.first_name }} {{ ele.last_name }}</li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+
+        {% if Web %}
+          <b>Web Developer: </b><br>
+          {% for ele in Web %}
+            {% if request.user.username == ele.username %}
+              <li>{{ ele.first_name }} {{ ele.last_name }} (YOU)</li>
+            {% else %}
+              <li>{{ ele.first_name }} {{ ele.last_name }}</li>
+            {% endif %}
+          {% endfor %}
+        {% endif %}
+        </ul>
+    </div>
+  </aside>
+  </div>
+  {% endblock body-content %}
+
+  {% block jquery-datatable-plugin %}
+  <!-- <script type="text/javascript" 
+  src="https://cdn.datatables.net/v/dt/dt-1.10.23/datatables.min.js"></script> -->
+  <script src="//code.jquery.com/jquery-3.3.1.min.js"></script>
+  <script src="//cdn.datatables.net/1.10.19/js/jquery.dataTables.min.js"></script>
+  {% endblock jquery-datatable-plugin %}
+  
+
+  <!-- javascripts -->
+  {% block javascript %}
+  <script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
+  <script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+  <script type="text/javascript" src="{% static 'js/jquery-ui-1.9.2.custom.min.js' %}">
+  </script>
+  {% endblock javascript %}
+  <!-- bootstrap -->
+  <!-- <script src="{% static 'js/bootstrap.min.js' %}"></script> -->
+  <!-- nice scroll -->
+  <!-- <script src="{% static 'js/jquery.scrollTo.min.js' %}"></script>
+  <script src="{% static 'js/jquery.nicescroll.js' %}" type="text/javascript"></script> -->
+  <!-- charts scripts -->
+          <!-- {
+              defaultContent: "<td><button><a href='{% url "record_delete" member.id %}'>Delete</a></button></td><td><button><a href='{% url "record_change" member.id %}'>Update</a></button></td>"
+             } -->
+  {% block charts-scripts %}
+  <script src="{% static 'assets/jquery-knob/js/jquery.knob.js' %}"></script>
+  <script src="{% static 'js/jquery.sparkline.js' %}" type="text/javascript"></script>
+  <script src="{% static 'assets/jquery-easy-pie-chart/jquery.easy-pie-chart.js' %}"></script>
+  <script src="{% static 'js/owl.carousel.js' %}"></script>
+  {% endblock charts-scripts %}
+
+  
+  
+  {% block custom-select %}
+    <!-- custom select -->
+    <script src="{% static 'js/jquery.customSelect.min.js' %}"></script>
+    <script src="{% static 'assets/chart-master/Chart.js' %}"></script>
+  {% endblock custom-select %}
+    <!--custome script for all page-->
+    <!-- <script src="{% static 'js/scripts.js' %}"></script> -->
+    
+  {% block custom-script-index-page %}
+    <!--script for this page only-->
+    <script src="{% static 'js/calendar-custom.js' %}"></script>
+    <script src="{% static 'js/jquery.rateit.min.js' %}"></script>
+    <!-- custom script for this page-->
+    <script src="{% static 'js/sparkline-chart.js' %}"></script>
+    <script src="{% static 'js/easy-pie-chart.js' %}"></script>
+    <script src="{% static 'js/jquery-jvectormap-1.2.2.min.js' %}"></script>
+    <script src="{% static 'js/jquery-jvectormap-world-mill-en.js' %}"></script>
+    <script src="{% static 'js/xcharts.min.js' %}"></script>
+    <script src="{% static 'js/jquery.autosize.min.js' %}"></script>
+    <script src="{% static 'js/jquery.placeholder.min.js' %}"></script>
+    <script src="{% static 'js/gdp-data.js' %}"></script>
+    <script src="{% static 'js/morris.min.js' %}"></script>
+    <script src="{% static 'js/sparklines.js' %}"></script>
+    <script src="{% static 'js/charts.js' %}"></script>
+    <script src="{% static 'js/jquery.slimscroll.min.js' %}"></script>
+  {% endblock custom-script-index-page %}
+
+  {% block javascript-code %}
+    <script>
+      //knob
+      $(function() {
+        $(".knob").knob({
+          'draw': function() {
+            $(this.i).val(this.cv + '%')
+          }
+        })
+      });
+
+      //carousel
+      $(document).ready(function() {
+        $("#owl-slider").owlCarousel({
+          navigation: true,
+          slideSpeed: 300,
+          paginationSpeed: 400,
+          singleItem: true
+
+        });
+      });
+
+      //custom select box
+
+      $(function() {
+        $('select.styled').customSelect();
+      });
+
+      /* ---------- Map ---------- */
+      $(function() {
+        $('#map').vectorMap({
+          map: 'world_mill_en',
+          series: {
+            regions: [{
+              values: gdpData,
+              scale: ['#000', '#000'],
+              normalizeFunction: 'polynomial'
+            }]
+          },
+          backgroundColor: '#eef3f7',
+          onLabelShow: function(e, el, code) {
+            el.html(el.html() + ' (GDP - ' + gdpData[code] + ')');
+          }
+        });
+      });
+    </script>
+{% endblock javascript-code %}
+

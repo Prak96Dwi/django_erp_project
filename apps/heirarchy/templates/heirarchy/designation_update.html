@@ -1,0 +1,168 @@
+{% extends 'heirarchy/base.html' %}
+{% load static %}
+
+
+{% block title %} Designation Update Form
+{% endblock title %}
+
+{% block body-content %}
+<div class="container txt-center">
+<center>
+<form method="POST" 
+  style="margin-left:300px; background-color: white; padding: 55px" >
+	{% csrf_token %}
+	<h2><b>Designation Update</b></h2>
+  
+	<div class = "row from-group">
+    <div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+      <label for="parent">Parent : </label>
+    </div>
+    <div class="col-md-8 col-bg-8  col-sm-8 col-lg-8">
+		<select name="parent" id="" class="form-control form-control-sm" required="required">  
+		
+	  <optgroup label="Director">
+          {% for member in DIR %}
+          <option value="{{ member.email }}" selected>{{ member.first_name }} 
+            {{ member.last_name }}
+          </option>
+          {% endfor %}
+    </optgroup>
+	  
+      
+	  <optgroup label="Cheif Technical Officer">
+          {% for member in CTO %}
+            <option value="{{ member.email }}" selected>{{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+      </optgroup>
+
+      <optgroup label="Project Manager">
+          {% for member in PM %}
+            <option value="{{ member.email }}" selected>{{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+      </optgroup>
+
+      <optgroup label="Tech Leader">
+          {% for member in TL %}
+            <option value="{{ member.email }}" selected>{{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+      </optgroup>
+
+      <optgroup label="Web Developer">
+          {% for member in Web %}
+            <option value="{{ member.email }}" selected>{{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+          <option value=" " selected>-----------</option>
+      </optgroup>
+
+	</select> 
+  </div>
+  <div><br><br><br>
+	
+  <div class = "row from-group">
+	<div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+    <label for="child">Child : </label>
+  </div>
+	<div class="col-md-8 col-bg-8 col-sm-8 col-lg-8"> 
+    <select name="child" id="secondChild" class="form-control form-control-sm" required="required">
+		
+	  <optgroup label="Director">
+          {% for member in DIR %}
+          <option value="{{ member.email }}" 
+          data-designation = "{{ member.designation }}" selected>
+          {{ member.first_name }} 
+            {{ member.last_name }}
+          </option>
+          {% endfor %}
+      </optgroup>
+	    
+	  <optgroup label="Cheif Technical Officer">
+          {% for member in CTO %}
+            <option value="{{ member.email }}" 
+            data-designation = "{{ member.designation }}" selected>
+            {{ member.first_name }} 
+            {{ member.last_name }}
+        	</option>
+          {% endfor %}
+      </optgroup>
+
+      <optgroup label="Project Manager">
+          {% for member in PM %}
+            <option value="{{ member.email }}" 
+            data-designation = "{{ member.designation }}" selected>
+            {{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+      </optgroup>
+
+      <optgroup label="Tech Leader">
+          {% for member in TL %}
+            <option value="{{ member.email }}" 
+            data-designation = "{{ member.designation }}" selected>
+            {{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+      </optgroup>
+
+      <optgroup label="Web Developer">
+          {% for member in Web %}
+          <option value="{{ member.email }}" 
+          data-designation = "{{ member.designation }}" selected>
+          {{ member.first_name }} 
+            {{ member.last_name }}</option>
+          {% endfor %}
+          <option value=" " selected>-----------</option>
+      </optgroup>
+
+	</select> 
+	</div>
+</div><br>
+<div class = "row from-group">
+	<div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+    <label for="desination1">Current Designation:</label>
+  </div>
+  <div class="col-md-8 col-bg-8 col-sm-8 col-lg-8">
+    <input type="text"
+      name="current_designation" 
+      id="currentDesignation"
+      value=""
+      class="form-control"
+      required
+    />
+  </div>
+</div><br>
+<div class = "row from-group">
+	<div class="col-md-4 col-bg-4 col-sm-4 col-lg-4">
+    <label for="desination">Update Designation:</label>
+  </div>
+	<div class="col-md-8 col-bg-8 col-sm-8 col-lg-8">	
+    <select name="designation" id="" class="form-control form-control-sm" required="required">
+		  <option value="">----------</option>
+		  <option value="Cheif Technical Officer">Cheif Technical Officer</option>
+		  <option value="Web Developer">Web Developer</option>
+		  <option value="Tech Leader">Tech Leader</option>
+		  <option value="Project Manager">Project Manager</option>
+		</select>
+	</div>
+</div><br>
+	<input type="Submit" name="" class="btn allbtn"
+    style="" value="Update">
+</form>
+</center>
+</div>
+{% endblock body-content %}
+
+{% block javascript-code %}
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<script>
+$("#secondChild").on("change",function(){
+		
+		var setValue = $(this).find(':selected').data('designation')
+         //Setting Value
+        $("#currentDesignation").val(setValue);
+});
+</script>
+{% endblock javascript-code %}

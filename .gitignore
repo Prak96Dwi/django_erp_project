@@ -1,0 +1,15 @@
+
+# Migration files
+migrations/
+
+# pycache files
+__pycache__/
+
+# venv folders
+venv/
+
+# media folder
+media/
+
+# env file
+.env

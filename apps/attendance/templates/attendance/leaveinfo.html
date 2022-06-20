@@ -1,0 +1,44 @@
+{% extends 'user/base.html' %}
+{% load static %}
+
+{% block title %} Creative - Bootstrap Admin Template {% endblock title %}
+
+
+{% block body-content %}
+<div class="container">
+	
+		<h2>Leave Record</h2>
+		<table style="width: 80%; margin-left: 200px; margin-top: 150px;">
+		  <tr>
+		    <th>Name</th>
+		    <th>Leave Request Date</th>
+		    <th>Leave From</th>
+		    <th>Leave To</th>
+		    <th>HR Approval</th>
+		    <th>TL Approval </th>
+		    <th>Leave Reason</th>
+		  </tr>
+		  
+		{% for ele in data %}
+		  <tr>
+		    <td>{{ ele.name }}</td>
+		    <td>{{ ele.leave_request_date }}</td>
+		    <td>{{ ele.leave_from }}</td>
+		    <td>{{ ele.leave_to }}</td>
+		    <td>{{ ele.hr_approval }}</td>
+		    <td>{{ ele.tl_approval }}</td>
+		    <td>{{ ele.leave_reason }}</td>
+		  </tr>
+		{% endfor %}
+		  
+		</table>
+</div>
+{% endblock body-content %}
+
+<!-- javascripts -->
+{% block javascript %}
+<script src="{% static 'js/jquery-ui-1.10.4.min.js' %}"></script>
+<script src="{% static 'js/jquery-1.8.3.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/jquery-ui-1.9.2.custom.min.js' %}">
+</script>
+{% endblock javascript %}

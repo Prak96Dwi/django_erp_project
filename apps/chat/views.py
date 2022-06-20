@@ -1,0 +1,160 @@
+""" apps/chat/views.py """
+from apps.user.models import CustomUser
+import datetime
+from django.shortcuts import render, redirect
+from django.http import JsonResponse
+from django.views import View
+from django.conf import settings
+from .models import GroupMessage, ChatGroupList, OnetoOneMessage
+
+
+def display_empname():
+    all_members = CustomUser.objects.all()
+    PM,Web,CTO,TL,DIR = [],[],[],[],[]
+    for member in all_members:
+        if member.designation == settings.PROJECT_MANAGER:
+            PM.append(member)
+        elif member.designation == settings.WEB_DEVELOPER:
+            Web.append(member)
+        elif member.designation == settings.CHEIF_TECHNICAL_OFFICER:
+            CTO.append(member)
+        elif member.designation == settings.DIRECTOR:
+            DIR.append(member)
+        else:
+            TL.append(member)
+    return {'all_members': all_members,'PM': PM, 'Web':Web,'CTO':CTO, 'DIR':DIR, 'TL': TL}
+
+# def leaving_to_new_room(request):
+#     return render(request,)
+
+
+def create_channel(request):
+    empdict =  display_empname()
+    
+    if request.method == "POST":
+        l3 = request.POST.getlist('members') + [str(request.user.id)]
+        ides = CustomUser.objects.filter(id__in = l3)
+        obj2 = ChatGroupList.objects.create(
+            name=request.user.username,
+            group_name=request.POST['grpname'],
+            description=request.POST['description'], 
+        )
+        obj2.member_name.set(ides)
+        return redirect('/index')
+        # return redirect()
+    onelink, multilink = filter_channel_names(request)
+    mydict = {'onelink': onelink, 'multilink': multilink}
+    return render(request, 'chat/create_channel.html', {**mydict, **empdict})
+
+
+def load_channel_usernames(request):
+    """ 
+    This function is used to pass the record
+    of the user on ajax request.
+    """
+    # usernmId = request.GET.get('usernmId')
+    choice = []
+    dict2 = {}
+    queryset = CustomUser.objects.all()
+    obj = CustomUser.objects.get(id = request.user.id)
+    for i in queryset:
+        if obj.designation == 'Project Manager' and i.designation == 'Tech Leader':
+            choice.append({"id":i.id, "name":i.username, "designation": i.designation,
+                "first_name": i.first_name, "last_name": i.last_name})
+        elif obj.designation == 'Director' and i.designation == 'Cheif Technical Officer':
+            choice.append({"id":i.id, "name":i.username, "designation": i.designation,
+                "first_name": i.first_name, "last_name": i.last_name})
+        elif obj.designation == 'Cheif Technical Officer' and i.designation == 'Project Manager':
+            choice.append({"id":i.id, "name":i.username, "designation": i.designation,
+                "first_name": i.first_name, "last_name": i.last_name})
+        elif obj.designation == 'Tech Leader' and i.designation == 'Web Developer':
+            choice.append({"id":i.id, "name":i.username, "designation": i.designation,
+                "first_name": i.first_name, "last_name": i.last_name})
+        elif obj.designation == 'Cheif Technical Officer' and i.designation != 'Director':
+            choice.append({"id":i.id, "name":i.username, "designation": i.designation,
+                "first_name": i.first_name, "last_name": i.last_name})
+    return JsonResponse(choice, safe=False)
+
+
+def filter_channel_names(request):
+    chatlink = ChatGroupList.objects.all()
+    mylink, onelink, multilink = [], [], []
+
+    for obj in chatlink:
+        if request.user in obj.member_name.all():
+            mylink.append(obj)
+
+    for obj1 in mylink:
+        if obj1.member_name.all().count() > 2:
+            multilink.append(obj1)
+        else:
+            onelink.append(obj1)
+    return onelink, multilink
+
+
+class GroupChat(View):
+
+    template_name = 'chat/group_room.html'
+
+    def get(self, request, id, **kwargs):
+        onelink, multilink = filter_channel_names(request)
+        message = GroupMessage.objects.filter(group_id=id).order_by('id')
+        name = request.user.first_name +"  "+ request.user.last_name
+        context = {'onelink': onelink, 'multilink': multilink, 'message': message,
+             'room_name': id, 'user_name': name}
+        return render(request, self.template_name, context)
+
+    def post(self, request, id, **kwargs):
+        txt = request.POST['mytext']
+        name = request.user.first_name +"  "+ request.user.last_name
+        name = "Prakhar Dwivedi"
+        GroupMessage.objects.create(user_id=request.user.id,
+                                    name=name,
+                                    message=txt,
+                                    time=datetime.datetime.today().time(),
+                                    group_id=id
+                                   )
+        return redirect('/chat/group/%d'%(id))
+
+
+class OneChatRoom(View):
+    template_name = 'chat/one_room.html'
+
+    def get(self, request, id, **kwargs):
+        onelink, multilink = filter_channel_names(request)
+        message = OnetoOneMessage.objects.filter(group_id=id).order_by('id')
+        name = request.user.first_name +"  "+ request.user.last_name
+        context = {'onelink': onelink, 'multilink': multilink, 'message': message,
+                    'room_name': id, 'user_name': name}
+        return render(request, self.template_name, context)
+
+    def post(self, request, id, **kwargs):
+        txt = request.POST['mytext']
+        name = request.user.first_name +"  "+ request.user.last_name
+        
+        OnetoOneMessage.objects.create(user_id=request.user.id,
+                                       name=name,
+                                       message=txt,
+                                       time=datetime.datetime.today().time(),
+                                       group_id=id
+                                    )
+        return redirect('/chat/one/%d'%(id))
+
+def createone_channel(request):
+    # Function to create one channel
+    enames =  display_empname()
+    onelink, multilink = filter_channel_names(request)
+    if request.method == "POST":
+        l3 = request.POST.getlist('members') + [str(request.user.id)]
+        ides = CustomUser.objects.filter(id__in = l3)
+        obj1 = get_object_or_404(CustomUser, pk=l3[0])
+        obj2 = ChatGroupList.objects.create(
+                                name=request.user.username,
+                                group_name=obj1.first_name +"  "+ obj1.last_name,
+                                description=request.user.first_name +"  "+ request.user.last_name
+                                )
+        obj2.member_name.set(ides)
+        return redirect('/index')
+    mydict = {'onelink': onelink, 'multilink': multilink}
+    context =  {**mydict , **enames}
+    return render(request, 'chat/create_oneroom.html', context)
