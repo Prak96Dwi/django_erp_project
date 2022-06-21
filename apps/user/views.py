@@ -21,7 +21,9 @@ from .models import CustomUser
 def index(request):
     """Home Page of this site
 
-    Renders home page having data of heirarchy model
+    Renders home page having data of heirarchy model.
+
+    ** Context **
 
     """
     all_members = filter_name(request)
